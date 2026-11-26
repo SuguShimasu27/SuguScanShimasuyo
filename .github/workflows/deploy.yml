@@ -27,7 +27,7 @@ jobs:
         run: npm ci
 
       - name: Build website
-        run: npm run build -- --public-url /SuguScanShimasuyo/
+        run: npx parcel build src/index.html --public-url /SuguScanShimasuyo/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
