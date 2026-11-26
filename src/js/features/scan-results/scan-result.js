@@ -45,6 +45,20 @@ const styles = /* css */ `
     margin-block-start: 0.25rem;
   }
 
+  .result__content {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .result__content .result__item {
+    justify-self: start
+  }
+  
+  .result__content .result__datetime {
+    justify-self: end
+  }
+
   .result__datetime:empty {
     display: none !important;
   }
