@@ -204,14 +204,15 @@ class ScanResult extends HTMLElement {
 
     resultEl.className = 'result__item';
     resultEl.part = 'result__item';
-    resultEl.textContent = value;
+    //resultEl.textContent = value;
+    resultEl.textContent = `${value} \t ${dateTimeFormatter.format(new Date())}`;
 
-    resultDatetimeEl.textContent = dateTimeFormatter.format(new Date());
+    //resultDatetimeEl.textContent = dateTimeFormatter.format(new Date());
 
 //--------------------------------------------------------------------------------------------------------
-    resultElDate.textContent = `${value} \t ${dateTimeFormatter.format(new Date())}`;
+  //  resultElDate.textContent = `${value} \t ${dateTimeFormatter.format(new Date())}`;
     
-    resultContentEl?.insertBefore(resultElDate);
+    //resultContentEl?.insertBefore(resultElDate);
 //--------------------------------------------------------------------------------------------------------
     
     const copyEl = baseEl?.querySelector('clipboard-copy');
