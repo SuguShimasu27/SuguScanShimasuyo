@@ -211,7 +211,7 @@ class ScanResult extends HTMLElement {
 //--------------------------------------------------------------------------------------------------------
   //  resultElDate.textContent = `${value} \t ${dateTimeFormatter.format(new Date())}`;
     
-    resultContentEl?.insertbehind(resultEl, resultDatetimeEl);
+    resultContentEl?.insertBefore(resultEl, resultDatetimeEl);
 
 //--------------------------------------------------------------------------------------------------------
     
