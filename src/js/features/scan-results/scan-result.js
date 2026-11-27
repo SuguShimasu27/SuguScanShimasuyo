@@ -213,7 +213,7 @@ class ScanResult extends HTMLElement {
     resultDatetimeEl.textContent = dateTimeFormatter.format(new Date());
 
     
-    resultContentEl?.insertBefore(resultEl, resultDatetimeEl);
+    resultContentEl?.appendChild(resultEl);
 
     
     const copyEl = baseEl?.querySelector('clipboard-copy');
