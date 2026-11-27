@@ -46,17 +46,20 @@ const styles = /* css */ `
 
   }
   .result__content {
-    display: grid;
-    justify-content: center;
-    grid-template-columns: 1fr 1fr;
+    display: table;
+    width: 100%
   }
 
   .result__content .result__item {
-    justify-self: start
+    display: table-cell;
+    width: 50%;
+    padding: 1rem;
   }
   
   .result__content .result__datetime {
-    justify-self: end
+    display: table-cell;
+    width: 50%;
+    padding: 1rem;
   }
 
   .result__datetime:empty {
