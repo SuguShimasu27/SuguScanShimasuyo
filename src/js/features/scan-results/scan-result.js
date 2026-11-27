@@ -42,7 +42,7 @@ const styles = /* css */ `
   .result__datetime {
     font-size: 0.8rem;
     color: var(--text-muted);
-    margin-block-start: 0.25rem;
+
   }
 //--------------------------------------------------------------------------------------------------------
   .result__content {
