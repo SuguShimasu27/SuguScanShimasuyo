@@ -44,7 +44,7 @@ const styles = /* css */ `
     color: var(--text-muted);
     margin-block-start: 0.25rem;
   }
-
+//--------------------------------------------------------------------------------------------------------
   .result__content {
     display: grid;
     justify-content: center;
@@ -70,7 +70,7 @@ const styles = /* css */ `
     justify-content: center;
     gap: 0.75rem;
   }
-
+//--------------------------------------------------------------------------------------------------------
   .result web-share button,
   .result clipboard-copy::part(button) {
     display: flex;
@@ -207,8 +207,13 @@ class ScanResult extends HTMLElement {
     resultEl.textContent = value;
 
     resultDatetimeEl.textContent = dateTimeFormatter.format(new Date());
-    resultContentEl?.insertBefore(resultEl, resultDatetimeEl);
 
+//--------------------------------------------------------------------------------------------------------
+    resultElDate.textContent = `${value} \t ${dateTimeFormatter.format(new Date())}`;
+    
+    resultContentEl?.insertBefore(resultElDate);
+//--------------------------------------------------------------------------------------------------------
+    
     const copyEl = baseEl?.querySelector('clipboard-copy');
     const shareEl = baseEl?.querySelector('web-share');
 
