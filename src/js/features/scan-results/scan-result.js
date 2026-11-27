@@ -46,9 +46,10 @@ const styles = /* css */ `
 
   }
   .result__content {
-    display: table;
+    display: grid;
     justify-content: center;
     grid-template-columns: 1fr 1fr;
+    flex-grow: 1
   }
 
   .result__content .result__item {
