@@ -1,3 +1,298 @@
+
+// import { isWebShareSupported } from '@georapbox/web-share-element/dist/is-web-share-supported.js';
+// import { dateTimeFormatter } from '../../shared/utils/datetime-formatter.js';
+// import { getSettings } from '../settings/settings-storage.js';
+
+// const styles = /* css */ `
+//   :host {
+//     box-sizing: border-box;
+//   }
+
+//   :host *,
+//   :host *::before,
+//   :host *::after {
+//     box-sizing: inherit;
+//   }
+
+//   :host([hidden]),
+//   [hidden],
+//   ::slotted([hidden]) {
+//     display: none !important;
+//   }
+
+//   .result {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//     gap: 0.5rem;
+//     position: relative;
+//     width: 100%;
+//     padding: 0.5rem;
+//   }
+
+//   .result__item {
+//     word-wrap: break-word;
+//     word-break: break-word;
+//     white-space: pre-line;
+//   }
+
+//   a.result__item {
+//     color: var(--links);
+//   }
+
+//   .result__datetime {
+//     font-size: 0.8rem;
+//     color: var(--text-muted);
+//     margin-block-start: 0.25rem
+
+//   }
+//   .result__content {
+//     display: table;
+//     width: 100%
+//   }
+
+//   .result__content .result__item {
+//     display: table-cell;
+//     width: 50%;
+//     padding: 1rem;
+//   }
+  
+//   .result__content .result__datetime {
+//     display: table-cell;
+//     width: 50%;
+//     padding: 1rem;
+//   }
+
+//   .result__datetime:empty {
+//     display: none !important;
+//   }
+
+//   .result__actions {
+//     display: flex;
+//     align-items: center;
+//     align-items: center;
+//     justify-content: center;
+//     gap: 0.75rem;
+//   }
+//   .result web-share button,
+//   .result clipboard-copy::part(button) {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     gap: 0.25rem;
+//     padding: 0.25rem;
+//     background-color: transparent;
+//     border: 0;
+//     border-radius: var(--border-radius);
+//     color: inherit;
+//     line-height: 1;
+//     font-family: inherit;
+//     font-size: 0.9rem;
+//     cursor: pointer;
+//   }
+
+//   .result clipboard-copy::part(button--success) {
+//     color: var(--success-color);
+//   }
+
+//   .result clipboard-copy::part(button--error) {
+//     color: var(--danger-color);
+//   }
+// `;
+
+// const template = document.createElement('template');
+
+// template.innerHTML = /* html */ `
+//   <style>${styles}</style>
+
+//   <table class="result" part="result">
+//     <tr>
+//       <td class="result__content"></td>
+//       <td class="result__datetime"></td>
+//     </tr>
+//   </table>
+
+//   <div class="result__actions">
+//    <clipboard-copy only-icon></clipboard-copy>
+
+//     <web-share>
+//       <button slot="button" type="button">
+//         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+//           <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+//         </svg>
+//       </button>
+//     </web-share>
+//   </div>
+  
+// `;
+
+// class ScanResult extends HTMLElement {
+//   constructor() {
+//     super();
+
+//     if (!this.shadowRoot) {
+//       const shadowRoot = this.attachShadow({ mode: 'open' });
+//       shadowRoot.appendChild(template.content.cloneNode(true));
+//     }
+//   }
+
+//   get value() {
+//     return this.getAttribute('value');
+//   }
+
+//   set value(value) {
+//     this.setAttribute('value', value);
+//   }
+
+//   static get observedAttributes() {
+//     return ['value'];
+//   }
+
+//   attributeChangedCallback(name, oldValue, newValue) {
+//     if (name === 'value' && oldValue !== newValue) {
+//       this.#handleValueChange(this.value);
+//     }
+//   }
+
+//   connectedCallback() {
+//     this.#upgradeProperty('value');
+
+//     this.#highlight();
+
+//     if (!isWebShareSupported()) {
+//       const webShareEl = this.shadowRoot.querySelector('web-share');
+
+//       if (webShareEl) {
+//         webShareEl.hidden = true;
+//       }
+//     }
+//   }
+
+//   /**
+//    * Handles changes to the `value` attribute by creating a new result element
+//    * with the updated value, updating the datetime, and configuring the copy
+//    * and share buttons.
+//    *
+//    * @param {string} value - The new value to display in the result.
+//    */
+//   async #handleValueChange(value) {
+//     const baseEl = this.shadowRoot.querySelector('.result');
+//     const resultContentEl = baseEl?.querySelector('.result__content');
+//     const resultDatetimeEl = baseEl?.querySelector('.result__datetime');
+//     const oldResultEl = baseEl?.querySelector('.result__item');
+//     let resultEl;
+
+//     if (oldResultEl) {
+//       oldResultEl?.remove();
+//     }
+
+//     try {
+//       const [, settings] = await getSettings();
+
+//       new URL(value);
+//       resultEl = document.createElement('a');
+//       resultEl.href = value;
+
+//       if (!settings?.openWebPageSameTab) {
+//         resultEl.setAttribute('target', '_blank');
+//         resultEl.setAttribute('rel', 'noreferrer noopener');
+//       }
+
+//       if (settings?.openWebPage) {
+//         resultEl.click();
+//       } else {
+//         window.requestAnimationFrame(() => resultEl.focus());
+//       }
+//     } catch {
+//       resultEl = document.createElement('span');
+//     }
+
+//     resultEl.className = 'result__item';
+//     resultEl.part = 'result__item';
+//     resultEl.textContent = value;
+
+//     resultDatetimeEl.textContent = dateTimeFormatter.format(new Date());
+
+    
+//     resultContentEl?.appendChild(resultEl);
+
+    
+//     const copyEl = baseEl?.querySelector('clipboard-copy');
+//     const shareEl = baseEl?.querySelector('web-share');
+
+//     if (copyEl) {
+//       const copyButtonEl = copyEl.shadowRoot?.querySelector('button');
+//       copyEl.setAttribute('value', value);
+//       copyButtonEl?.setAttribute('aria-label', 'Copy scan result to clipboard');
+//       copyEl.hidden = false;
+//     }
+
+//     if (shareEl && isWebShareSupported()) {
+//       const shareButtonEl = shareEl.querySelector('button');
+//       shareEl.setAttribute('share-text', value);
+//       shareEl.hidden = false;
+//       shareButtonEl?.setAttribute('aria-label', 'Share scan result');
+//     }
+//   }
+
+//   /**
+//    * Animates the background color of the result element to highlight it when it
+//    * first appears.
+//    */
+//   #highlight() {
+//     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+//       return;
+//     }
+
+//     const baseEl = this.shadowRoot.querySelector('.result');
+//     const from = { backgroundColor: 'var(--highlight)' };
+//     const to = { backgroundColor: 'transparent' };
+//     const opts = { duration: 400, easing: 'ease-out' };
+
+//     baseEl?.animate([from, to], opts);
+//   }
+
+//   /**
+//    * Re-applies a property value that may have been set on the element
+//    * instance before the custom element was defined.
+//    *
+//    * This handles cases where a framework sets a property on the element
+//    * before its definition is loaded. Without this step, the own property
+//    * on the instance would shadow the class setter and prevent it from
+//    * running after upgrade.
+//    *
+//    * @see https://web.dev/articles/custom-elements-best-practices#make_properties_lazy
+//    *
+//    * @param {string} prop - The property name to upgrade.
+//    */
+//   #upgradeProperty(prop) {
+//     const instance = this;
+
+//     if (Object.prototype.hasOwnProperty.call(instance, prop)) {
+//       const value = instance[prop];
+//       delete instance[prop];
+//       instance[prop] = value;
+//     }
+//   }
+
+//   /**
+//    * Defines the custom element by registering it with the browser's
+//    * CustomElementRegistry if it hasn't been defined already.
+//    *
+//    * @param {string} [tagName='scan-result'] - The tag name to use for the custom element.
+//    */
+//   static define(tagName = 'scan-result') {
+//     if (typeof window === 'undefined' || window.customElements.get(tagName)) {
+//       return;
+//     }
+//     window.customElements.define(tagName, ScanResult);
+//   }
+// }
+
+// export { ScanResult };
+
+//----------------------------------------------------------------------------------------------------------
+
 import { isWebShareSupported } from '@georapbox/web-share-element/dist/is-web-share-supported.js';
 import { dateTimeFormatter } from '../../shared/utils/datetime-formatter.js';
 import { getSettings } from '../settings/settings-storage.js';
@@ -289,3 +584,4 @@ class ScanResult extends HTMLElement {
 }
 
 export { ScanResult };
+
